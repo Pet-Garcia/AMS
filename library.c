@@ -53,7 +53,7 @@ void listar() {
     printf("\n--- Lista de Jogadores ---\n");
 
     for (int i = 0; i < totalJogadores; i++) {
-        printf(" %d - %s | Pontos: %.2f | %s | %.0f", i + 1, ranking[i].nome, ranking[i].pontos, ranking[i].nickname, ranking[i].numvitoria);
+        printf(" %d - %s | Pontos: %.2f | %s | %.0f \n", i + 1, ranking[i].nome, ranking[i].pontos, ranking[i].nickname, ranking[i].numvitoria);
 
     }
 }
@@ -66,17 +66,16 @@ void classificacao() {
     }
 
     float maiorpontuacao = 0;
-    int cont = 0;
+    int indiceMaior = 0;
 
     for (int i = 0; i < totalJogadores; i++) {
         if(maiorpontuacao < ranking[i].pontos) {
             maiorpontuacao = ranking[i].pontos;
+            indiceMaior = i;
         }
-        cont++;
     }
 
-    printf("O jogador com a maior pontuacao eh: %s", ranking->nome);
-    printf("\nMaior pontuação: %.0f\n", ranking[1].pontos);
+    printf("O jogador com a maior pontuacao eh: %s | Pontos: %.0f \n", ranking[indiceMaior].nome,ranking[indiceMaior].pontos);
 }
 
 int main() {
