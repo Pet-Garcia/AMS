@@ -8,11 +8,12 @@
 #include "raylib.h"
 #include <stdio.h>
 
-#define TOTAL_ASSENTOS 40
+#define total_assentos 40
+#define total_viagens 40
 
 // Estrutura para o ônibus
 typedef struct {
-    int assentos[TOTAL_ASSENTOS]; // 0 = livre, 1 = ocupado
+    int assentos[total_assentos]; // 0 = livre, 1 = ocupado
 	} Onibus;
 
 typedef struct {
@@ -32,45 +33,36 @@ typedef struct{
     char lcInicio[50];
     char lcDestino[50];
     Data dataViagem;
-    int codViagem[3];
+    int codViagem;
     } Viagem;
 
 // Função que abre a janela com o mapa dos assentos
-void MostrarMapaVisual(Onibus b) {
-    // Programação da janela
-    InitWindow(600, 600, "Mapa de Assentos");
+void MostrarMapaVisual(Onibus b, int codigo) {
+	// Programação da janela com o código da viagem no título
+    InitWindow(600, 600, TextFormat("Mapa de Assentos - Viagem %d", codigo));
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
-        BeginDrawing();
-            ClearBackground(RAYWHITE);
-            DrawText("MAPA DE ASSENTOS (ESC para sair)", 20, 20, 20, DARKGRAY);
+    	BeginDrawing();
+        	ClearBackground(RAYWHITE);
+            // Texto agora mostra qual viagem estamos vendo
+            DrawText(TextFormat("MAPA VIAGEM: %d (ESC para sair)", codigo), 20, 20, 20, DARKGRAY);
 
-            // Grade dos assentos
-            for (int i = 0; i < TOTAL_ASSENTOS; i++) {
-                int coluna = i % 4;
-                int linha = i / 4;
-
-                // Locais dos quadrados
+            for (int i = 0; i < total_assentos; i++) {
+            	int coluna = i % 4;
+            	int linha = i / 4;
                 int x = 150 + (coluna * 60);
                 int y = 70 + (linha * 35);
-
-                // Se o corredor estiver no meio (entre coluna 1 e 2)
                 if (coluna > 1) x += 40;
-
-                // Muda a cor se estiver ocupado ou não
                 Color cor = (b.assentos[i] == 0) ? GREEN : RED;
-
-                // Represetação dos assentos
                 DrawRectangle(x, y, 40, 25, cor);
                 DrawText(TextFormat("%02d", i + 1), x + 10, y + 5, 15, WHITE);
             }
 
-            DrawText("VERDE: Livre | VERMELHO: Ocupado", 180, 370, 15, DARKGRAY);
-        EndDrawing();
-    }
-
-    CloseWindow(); // Fecha o mapa
+            DrawText("VERDE: Livre | VERMELHO: Ocupado", 180, 550, 15, DARKGRAY);
+            EndDrawing();
+       	}
+    CloseWindow();
 }
 
 
@@ -114,22 +106,27 @@ void CadastrarPoltrona(Onibus *o){
 }
 
 
-void VerViagens(Viagem *v){
-	char controle = 'z';
-	while (controle != 'x'){
+// Busca o código da viagem na lista ou -1 se não encontrar
+int BuscarViagem(Viagem lista[], int total, int codigo) {
+    for (int i = 0; i < total; i++) {
+        if (lista[i].codViagem == codigo) {
+            return i;
+        }
+    }
+    return -1;
+}
 
-        printf("--- Viagens Disponiveis ---\n");
-        printf("Viagem: 919\n");
-        printf("Viagem: 918\n");
-        printf("Viagem: 917\n");
-        printf("Viagem: 916\n");
-        printf("Viagem: 915\n");
-        printf("--------------------------\n");
-        printf("Insira x para voltar:");
-        scanf(" %c", &controle);
+void VerViagens(Viagem lista[], int total) {
+    if (total == 0) {
+        printf("\n### Nenhuma Viagem Cadastrada no Sistema ###\n");
+        return;
+    }
 
-	}
-	controle = 'z';
+    printf("\n--- Viagens no Sistema ---\n", total);
+    for (int i = 0; i < total; i++) {
+        printf("Codigo: [%d] | Origem: %s | Destino: %s", lista[i].codViagem, lista[i].lcInicio, lista[i].lcDestino);
+    }
+    printf("-------------------------------\n");
 }
 
 
@@ -155,42 +152,102 @@ int main() {
 	// Força o console a mostrar o funcionamento do software !!Não remover, se não não funciona por bug!!
 	        setvbuf(stdout, NULL, _IONBF, 0);
 
-	Onibus meuOnibus = {0}; // Todos começam disponiveis (0)
-    Viagem viagem;
+	Viagem listaViagem[total_viagens];
+	Onibus listaOnibus[total_viagens];
+	int totalviagem = 0;
     Passageiro cadastro;
 
 	int opcao = 0;
 
-    while (opcao != 5) {
+    while (opcao != 6) {
         printf("\n--- SISTEMA Rodoviario ---\n");
         printf("1. Comprar Passagem\n");
         printf("2. Ver Mapa de Assentos (Visual)\n");
-        printf("3. Ver viagens disponiveis\n");
-        printf("4. Cancelar passagem\n");
-        printf("5. Sair\n");
+        printf("3. Criar nova Viagem\n");
+        printf("4. Ver viagens disponiveis\n");
+        printf("5. Cancelar passagem\n");
+        printf("6. Sair\n");
         printf("--------------------------\n");
         printf("Escolha: ");
         scanf("%d", &opcao);
 
+        int cod, idx;
+
         switch(opcao){
         	case 1:
         		//Cadastro das informações do passageiro
-        		CadastrarPassageiro(&cadastro);
-        		CadastrarViagem(&viagem);
-        		CadastrarPoltrona(&meuOnibus);
+        		printf("Digite o codigo da viagem: ");
+                scanf("%d", &cod);
+                idx = BuscarViagem(listaViagem, totalviagem, cod);
+                if (idx != -1) {
+                    CadastrarPassageiro(&cadastro);
+                    // Passa o ônibus específico dessa viagem
+                    int num;
+                    printf("Numero da poltrona (1-40): ");
+                    scanf("%d", &num);
+                    if (num >= 1 && num <= 40) {
+                        listaOnibus[idx].assentos[num - 1] = 1;
+                        printf("Venda realizada na viagem %d!\n", cod);
+                    }
+                } else {
+                    printf("Viagem nao encontrada!\n");
+                }
         		break;
 
         	case 2:
-        		printf("Abrindo mapa visual... feche a janela para voltar.\n");
-        		MostrarMapaVisual(meuOnibus);
+        		printf("Codigo da viagem para ver o mapa: ");
+                scanf("%d", &cod);
+                idx = BuscarViagem(listaViagem, totalviagem, cod);
+                if (idx != -1) {
+                	printf("Abrindo mapa visual... feche a janela para voltar.\n");
+                    MostrarMapaVisual(listaOnibus[idx], cod);
+                } else {
+                    printf("Viagem nao cadastrada!\n");
+                }
         		break;
 
         	case 3:
-        		VerViagens(&viagem);
+        		if (totalviagem < total_viagens) {
+        			CadastrarViagem(&listaViagem[totalviagem]);
+        			// Zera os assentos do ônibus que acabou de ser criado
+        			for(int i = 0; i < total_assentos; i++) {
+        				listaOnibus[totalviagem].assentos[i] = 0;
+        			}
+        			totalviagem++;
+        		} else {
+        			printf("Limite de viagens atingido!\n");
+        		}
         		break;
 
         	case 4:
-        		CancelarPassagem(&meuOnibus, &viagem, &cadastro);
+        		if (totalviagem == 0) {
+					printf("\n### Nenhuma Viagem Cadastrada ###\n");
+				} else {
+					printf("\n--- Viagens no Sistema ---\n");
+					for (int i = 0; i < totalviagem; i++) {
+						printf("[%d] %s -> %s\n", listaViagem[i].codViagem, listaViagem[i].lcInicio, listaViagem[i].lcDestino);
+					}
+				}
+        		break;
+
+        	case 5:
+        		printf("Digite o codigo da viagem: ");
+				scanf("%d", &cod);
+				idx = BuscarViagem(listaViagem, totalviagem, cod);
+				if (idx != -1) {
+					int num;
+					printf("Poltrona para cancelar: ");
+					scanf("%d", &num);
+					if (num >= 1 && num <= 40) {
+						listaOnibus[idx].assentos[num-1] = 0;
+						printf("Passagem cancelada!\n");
+					}
+				}
+        		break;
+
+        	case 6:
+        		opcao = 6;
+        		break;
         }
     }
 
