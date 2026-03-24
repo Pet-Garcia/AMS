@@ -5,19 +5,19 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="xmqoBiNsVidpkMJBZwaC-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="aluno" vertex="1">
-          <mxGeometry height="60" width="120" x="100" y="180" as="geometry" />
+          <mxGeometry height="60" width="120" x="120" y="160" as="geometry" />
         </mxCell>
         <mxCell id="xmqoBiNsVidpkMJBZwaC-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="curso" vertex="1">
-          <mxGeometry height="60" width="120" x="250" y="480" as="geometry" />
+          <mxGeometry height="60" width="120" x="120" y="460" as="geometry" />
         </mxCell>
         <mxCell id="xmqoBiNsVidpkMJBZwaC-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="matricula" vertex="1">
           <mxGeometry height="60" width="120" x="390" y="480" as="geometry" />
         </mxCell>
         <mxCell id="7h42l5QapYRAXFLoQmDT-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="professor" vertex="1">
-          <mxGeometry height="60" width="120" x="500" y="180" as="geometry" />
+          <mxGeometry height="60" width="120" x="350" y="110" as="geometry" />
         </mxCell>
-        <mxCell id="7h42l5QapYRAXFLoQmDT-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="60" width="120" x="350" y="390" as="geometry" />
+        <mxCell id="7h42l5QapYRAXFLoQmDT-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="turma" vertex="1">
+          <mxGeometry height="60" width="120" x="120" y="290" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
