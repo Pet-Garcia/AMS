@@ -92,7 +92,7 @@
           <mxGeometry height="40" width="40" x="160" y="10" as="geometry" />
         </mxCell>
         <mxCell id="kmF1oAVfAN3a1oa1fNmn-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Um aluno está registrado em diversos itemturma(lista). cada turma tem sua lista(itemturma)" vertex="1">
-          <mxGeometry height="30" width="60" x="30" y="50" as="geometry" />
+          <mxGeometry height="30" width="60" x="30" y="90" as="geometry" />
         </mxCell>
         <mxCell id="kmF1oAVfAN3a1oa1fNmn-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="1" vertex="1">
           <mxGeometry height="30" width="60" x="170" y="-40" as="geometry" />
@@ -105,6 +105,9 @@
         </mxCell>
         <mxCell id="kmF1oAVfAN3a1oa1fNmn-6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="N" vertex="1">
           <mxGeometry height="30" width="60" x="170" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kmF1oAVfAN3a1oa1fNmn-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="ra&lt;div&gt;nome&lt;/div&gt;&lt;div&gt;cpf&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="240" y="-110" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
