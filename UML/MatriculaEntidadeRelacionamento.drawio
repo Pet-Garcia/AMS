@@ -106,9 +106,6 @@
         <mxCell id="kmF1oAVfAN3a1oa1fNmn-6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="N" vertex="1">
           <mxGeometry height="30" width="60" x="170" y="60" as="geometry" />
         </mxCell>
-        <mxCell id="kmF1oAVfAN3a1oa1fNmn-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="ra&lt;div&gt;nome&lt;/div&gt;&lt;div&gt;cpf&lt;/div&gt;" vertex="1">
-          <mxGeometry height="30" width="60" x="240" y="-110" as="geometry" />
-        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
