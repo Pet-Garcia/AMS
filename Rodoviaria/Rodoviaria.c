@@ -171,7 +171,7 @@ void CadastrarViagem(Viagem *v){
 
     // Loop para validar a data
     while(validadata != 1){
-    	printf("Insira a data de Saída (Dia Mes Ano):\n");
+    	printf("Insira a data de Saida (Dia Mes Ano):\n");
     	scanf("%d %d %d", &v->dataViagem.dia, &v->dataViagem.mes, &v->dataViagem.ano); // Insere as informações da daya
 
     	// Puxa a função de validação
