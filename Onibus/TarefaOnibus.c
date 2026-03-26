@@ -260,6 +260,7 @@ void VerViagens(Viagem lista[], int total) {
 
     // Passa as informações das viagens para o usuário
     printf("\n--- Viagens no Sistema ---\n");
+    // Loop sobre as viagens existentes no banco
     for (int i = 0; i < total; i++) {
         printf("Codigo: [%d] | Origem: %s | Destino: %s", lista[i].codViagem, lista[i].lcInicio, lista[i].lcDestino);
     }
@@ -275,6 +276,7 @@ void SalvarDados(Viagem listaV[], Onibus listaO[], int total) {
     // Abre o arquivo em modo "wb" (Write Binary - Escrita Binária)
     FILE *arquivo = fopen("banco_viagens.bin", "wb");
 
+    // Caso não consiga criar o arquivo
     if (arquivo == NULL) {
         printf("ERRO: O sistema não conseguiu criar o backup\n");
         return;
@@ -321,7 +323,7 @@ void CarregarDados(Viagem listaV[], Onibus listaO[], int *total) {
     printf("Dados carregados: (%d viagens encontradas) \n", *total);
 }
 
-// Limpa buffer -- Resolve outro problema -- Não Retirar
+// Limpa buffer -- Resolve outros problema -- Não Retirar
 void LimparBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
@@ -329,8 +331,7 @@ void LimparBuffer() {
 void Pausar() {
 	printf("\n[Pressione ENTER para voltar ao menu]");
 	    // Limpa o buffer: consome todos os caracteres até encontrar um \n ou o fim do ficheiro
-	    int c;
-	    while ((c = getchar()) != '\n' && c != EOF);
+	    LimparBuffer();
 
 	    // Agora que o buffer está limpo, este getchar() vai realmente esperar o utilizador
 	    getchar();
@@ -342,39 +343,45 @@ int main() {
 	// Força o console a mostrar o funcionamento do software !!Não remover, se não não funciona por bug!!
 	        setvbuf(stdout, NULL, _IONBF, 0);
 
+	// Inicializa os arrays das Viagens e Onibus(Passageiros + poltronas)
 	Viagem listaViagem[total_viagens];
 	Onibus listaOnibus[total_viagens];
 
     int totalviagem = 0;
 	int opcao = 0;
 
+	// Inicializa o arquivo do banco de dados e puxa as informações dentro para o sistema
 	printf("Iniciando o Sistema Rodoviario...\n");
 	CarregarDados(listaViagem, listaOnibus, &totalviagem);
 
 
 	// Retorna o menu do sistema
     while (opcao != 8) {
+    	// Menu do sistema
         printf("\n--- SISTEMA Rodoviario ---\n");
-        printf("1. Comprar Passagem\n");
-        printf("2. Ver Mapa de Assentos (Visual)\n");
-        printf("3. Criar nova Viagem\n");
-        printf("4. Ver viagens disponiveis\n");
-        printf("5. Cancelar passagem\n");
-        printf("6. Gerar lista de Embarque\n");
-        printf("7. Buscar passageiro pelo cpf\n");
-        printf("8. Sair\n");
+        printf("1. Comprar Passagem\n"); // Compra a passagem indicando as informações do passageiro e da viagem que está pegando
+        printf("2. Ver Mapa de Assentos (Visual)\n"); // Mostra o mapa dos assentos de uma viagem escolhida de forma visual
+        printf("3. Criar nova Viagem\n"); // Cria novas viagens
+        printf("4. Ver viagens disponiveis\n"); // Puxa as viagens já existentes no sistema
+        printf("5. Cancelar passagem\n"); // Cancela a passagem de um passageiro pelo cpf ou pelas informações sobre a viagem e poltrona
+        printf("6. Gerar lista de Embarque\n"); // Gera uma lista sobre quem vai estar na Viagem
+        printf("7. Buscar Viagens do Passageiro pelo cpf\n"); // Busca as viagens do passageiro pelo cpf
+        printf("8. Sair\n"); // Salva os dados e fecha o sistema
         printf("--------------------------\n");
-        printf("Escolha: ");
+        printf("Escolha: "); // Seleciona qual função funcionar
         scanf("%d", &opcao);
 
         int cod, id;
 
         // Retorna a opção que o usuário escolheu do menu
         switch(opcao){
+
+			//Cadastro das informações do passageiro
         	case 1:
-        		//Cadastro das informações do passageiro
+
         		printf("Digite o codigo da viagem: ");
                 scanf("%d", &cod);
+                // Busca as informações da viagem e armazena em uma variavel
                 id = BuscarViagem(listaViagem, totalviagem, cod);
 
                 // if para ver se existe a viagem
@@ -399,33 +406,41 @@ int main() {
                         }
 
                     } else{
+                    	// Indica o erro do usuario sobre numero da poltrona inexistente
                     	printf("\n Erro: Numero invalido. Numeros de 1 a 40.\n");
                     }
                 } else {
-                    printf("Viagem nao encontrada!\n");
+                	// Indica o erro de não existir a viagem com esse codigo
+                    printf("Erro: Viagem nao encontrada!\n");
                 }
                 Pausar();
         		break;
 
+        	// Busca o mapa  dos assentos de uma viagem especifica
         	case 2:
-        		// Busca o mapa  dos assentos de uma viagem especifica
         		printf("Codigo da viagem para ver o mapa: ");
                 scanf("%d", &cod);
+                // Busca as informações da viagem e armazena em uma variavel
                 id = BuscarViagem(listaViagem, totalviagem, cod);
+
+                // Verifica se a viagem existe
                 if (id != -1) {
                 	printf("Abrindo mapa visual... feche a janela para voltar.\n");
+                	// Mostra a representação gráfica da viagem
                     MostrarMapaVisual(listaOnibus[id], listaViagem[id]);
                 } else {
-                    printf("Viagem nao cadastrada!\n");
+                	// Indica o erro para o usuario sobre não existir tal viagem
+                    printf("Erro: Viagem nao cadastrada!\n");
                 }
                 Pausar();
         		break;
 
+        	// Cadastra novas viagens
         	case 3:
-        		// Cadastra novas viagens
         		// Verifica se pode ser criado novas viagens
         		if (totalviagem < total_viagens) {
 
+        			// Cadastra as informações sobre a viagem e gera as informações necessárias
         			CadastrarViagem(&listaViagem[totalviagem]);
 
         			// Zera os assentos do ônibus que acabou de ser criado
@@ -433,20 +448,24 @@ int main() {
         				listaOnibus[totalviagem].assentos[i] = 0;
         			}
 
+        			// Aumenta a contagem de viagens existentes
         			totalviagem++;
         		} else {
-        			printf("Limite de viagens atingido!\n");
+        			// Indica que o sistema não tem espaço para mais viagens
+        			printf("Erro: Limite de viagens atingido!\n");
         		}
         		Pausar();
         		break;
 
+        	// Busca para o usuário as viagens existentes no sistema
         	case 4:
-        		// Busca para o usuário as viagens existentes no sistema
         		// Verifica se existe alguma viagem no sistema
         		if (totalviagem == 0) {
 					printf("\n### Nenhuma Viagem Cadastrada ###\n");
 				} else {
+					// Mostra as viagens que existem no sistema para o usuario
 					printf("\n--- Viagens no Sistema ---\n");
+					// Loop que verifica se tem alguma viagem no array
 					for (int i = 0; i < totalviagem; i++) {
 						printf("[%d] %s -> %s\n", listaViagem[i].codViagem, listaViagem[i].lcInicio, listaViagem[i].lcDestino);
 					}
@@ -454,20 +473,23 @@ int main() {
         		Pausar();
         		break;
 
+        	// Busca os dados relevantes para cancelar a viagem
         	case 5: {
-        		// Busca os dados relevantes para cancelar a viagem
         		int opcao2 = 0;
 
+        		// Inserção da variavel de busca
         		printf("Digite o codigo da viagem: ");
 				scanf("%d", &cod);
+				// Busca as informações da viagem e armazena em uma variavel
 				id = BuscarViagem(listaViagem, totalviagem, cod);
 
 
-				// Verifica se existem a viagem
+				// Verifica se existe a viagem
 				if (id != -1) {
+					// Menu para saber como vai ser cancelado
 					printf("Como deseja cancelar:");
-					printf("1. Buscar por poltrona\n");
-					printf("2. Buscar por cpf\n");
+					printf("1. Buscar por poltrona\n"); // Pelas informações sobre a poltrona
+					printf("2. Buscar por cpf\n"); // Pelas informações do usuario
 					printf("Escolha: ");
 					scanf("%d", &opcao2);
 
@@ -479,21 +501,26 @@ int main() {
 							printf("Digite o numero da poltrona (1-40): ");
 							scanf("%d", &num);
 
+							// Verifica se o numero da poltrona é valido
 							if (num >= 1 && num <= 40) {
+								// Verifica se a poltrona está livre
 								if (listaOnibus[id].assentos[num - 1] == 0) {
 									printf("\nErro: A poltrona %02d está livre\n", num);
 								} else {
-									listaOnibus[id].assentos[num - 1] = 0;
+									// Se estiver ocupada permite cancelar a passagem
+									listaOnibus[id].assentos[num - 1] = 0; //Deixa a poltrona livre
 									// Limpar o nome do passageiro para ficar vazio
 									strcpy(listaOnibus[id].passageiros[num - 1].nome, "");
 									printf("\nPassagem da poltrona %02d cancelada\n", num);
 								}
 							} else {
-								printf("\nNumero de poltrona invalido\n");
+								// Indica que o numero da poltrona é invalido
+								printf("\nErro: Numero de poltrona invalido\n");
 							}
 							break;
 						}
 
+						// Busca pelo usuario
 						case 2: {
 							char cpfBusca[16];
 							int achei = 0;
@@ -502,9 +529,9 @@ int main() {
 
 							// Percorre as 40 poltronas do ônibus
 							for (int j = 0; j < total_assentos; j++) {
-								// Compara se o assento está ocupado e compara cada caracter do cpf
+								// Verifica se o assento está ocupado e compara cada caracter do cpf para ver sse é existe no sistema
 								if (listaOnibus[id].assentos[j] == 1 && strcmp(listaOnibus[id].passageiros[j].cpf, cpfBusca) == 0) {
-									listaOnibus[id].assentos[j] = 0; // Cancela!
+									listaOnibus[id].assentos[j] = 0; // Cancela e deixa a poltrona livre
 									printf("\nPassagem encontrada na poltrona %02d e cancelada!\n", j + 1);
 									achei = 1;
 									break; // Para de procurar após achar o dono do CPF
@@ -512,57 +539,69 @@ int main() {
 							}
 
 							if (achei != 1) {
-								printf("\nCPF nao encontrado na Viagem %d\n", cod);
+								// Indica que não foi encontrado o cpf
+								printf("\nErro: CPF nao encontrado na Viagem %d\n", cod);
 							}
 							break;
 						}
 
+						// Verifica se a opção de menu é valida
 						default:
 							printf("\nOpcao de cancelamento inexistente. Opcao valida: 1 e 2\n");
 							break;
 					}
 				} else {
-					printf("\nViagem nao encontrada\n");
+					//  Inforam que a viagem não foi encontrada
+					printf("\nErro: Viagem nao encontrada\n");
 				}
 				Pausar();
         		break;
         	}
 
+        	// Gera a lista de embarque
         	case 6:
+        		// Inserção de variavel de busca
         		printf("Digite o codigo da viagem para a lista de embarque: \n");
         		scanf("%d", &cod);
+        		// Busca as informações da viagem e armazena em uma variavel
         		id = BuscarViagem(listaViagem, totalviagem, cod);
 
         		if (id != -1) {
-        			//Verifica se o id existe
+        			//Verifica se a viagem existe
         		        GerarListaEmbarque(listaOnibus[id], listaViagem[id]);
         		    } else {
-        		        printf("Viagem nao encontrada!\n");
+        		    	// Informa que a viagem não existe
+        		        printf("\nErro: Viagem nao encontrada!\n");
 
         		}
         		Pausar();
         		break;
 
+        	// Busca por cpf da passagem do cliente
         	case 7:
         		char cpfProcurado[16];
+        		// Inserção da variavel de busca
         		printf("Digite o CPF para busca: (apenas numeros): \n");
         		scanf("%s", cpfProcurado);
 
+        		// Função que verifica o sistema em busca do cpf
         		BuscarPassageiroCPF(listaViagem, listaOnibus, totalviagem, cpfProcurado);
 
         		Pausar();
         		break;
 
+        	// Encerra o programa
         	case 8:
-        		// Encerra o programa
+        		// Salva no armazenamento os dados inseridos
         		printf("\nSalvando informacoes...\n");
-        		SalvarDados(listaViagem, listaOnibus, totalviagem);
+        		SalvarDados(listaViagem, listaOnibus, totalviagem); // Função que salva
         		printf("Encerrando o sistema. Ate logo!\n");
-        		int c;
-        		while ((c = getchar()) != '\n' && c != EOF);
 
+        		LimparBuffer();
+        		break;
 
-        		getchar();
+        	default:
+        		printf("\nOpcao de Menu inexistente. Opcao valida: 1 a 8\n");
         		break;
         }
     }
