@@ -1,0 +1,74 @@
+/*
+    Header
+*/
+header-component {
+    display: block;
+}
+
+header nav {
+  display: flex;
+  gap: 2rem;
+  padding: 0.5rem 2rem;
+  background: #cfb15f;
+}
+
+header a {
+    color: rgb(3, 43, 123);
+    padding: 1rem;
+    border-radius: 20%;
+    border-left: #aa914d solid;
+    border-right: #aa914d solid;
+}
+
+header a:hover {
+    color: rgb(22, 121, 191);
+    background-color: #aa914d;
+    padding: 1rem;
+    border-radius: 20%;
+}
+
+/*
+    Footer
+*/
+footer-component {
+    display: block;
+    background: #cfb15f;
+    padding-top: 1px;
+}
+
+footer p {
+    text-align: center;
+}
+
+/*
+    Containers
+*/
+.conteudo {
+  max-width: 75%;
+  margin: 0 auto;      /* centraliza horizontalmente */
+  padding: 2rem 1rem;
+}
+
+.informacoes {
+  max-width: 100%;
+  margin: 0 auto 2rem; /* centralizado, com espaço embaixo */
+  padding: 2rem;
+  text-align: center;
+  background: #f0f0f0;
+  border-radius: 8px;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 colunas iguais */
+  grid-auto-rows: 120px;                 /* altura base de cada linha */
+  gap: 1rem;
+}
+
+.container-grande {
+    grid-column: span 2;
+    grid-row: span 2;
+    background: #f0f0f0;
+    padding: 0% 5% 0% 5%;
+    border-radius: 8px;
+}
