@@ -76,7 +76,8 @@ INSERT INTO `cursos` (`id_cursos`, `nome_cursos`, `num_aulas`, `periodo`) VALUES
 CREATE TABLE `matriculas` (
   `id_lista` int(11) NOT NULL,
   `id_curso` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL
+  `id_usuario` int(11) NOT NULL,
+  `data_matricula` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -111,6 +112,16 @@ ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id_usuario`);
 
 --
+-- Índices e relacionamentos da tabela `matriculas`
+--
+ALTER TABLE `matriculas`
+  ADD PRIMARY KEY (`id_lista`),
+  ADD UNIQUE KEY `uq_matricula_curso_usuario` (`id_curso`,`id_usuario`),
+  ADD KEY `idx_matriculas_usuario` (`id_usuario`),
+  ADD CONSTRAINT `fk_matriculas_curso` FOREIGN KEY (`id_curso`) REFERENCES `cursos` (`id_cursos`),
+  ADD CONSTRAINT `fk_matriculas_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+
+--
 -- AUTO_INCREMENT para tabelas despejadas
 --
 
@@ -125,6 +136,9 @@ ALTER TABLE `cursos`
 --
 ALTER TABLE `usuarios`
   MODIFY `id_usuario` int(5) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `matriculas`
+  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

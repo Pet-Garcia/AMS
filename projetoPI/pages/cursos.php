@@ -1,29 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cursos</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
-    <header-component></header-component>
+<?php
+if (!defined('APP_LAYOUT')) {
+    header('Location: login.php');
+    exit;
+}
 
-    <main class="conteudo">
-        <section class="informacoes">
-            <h1>Cursos</h1>
-            <p>Os cursos são ministrados de acordo com...</p>
-        </section>
+require_once __DIR__ . '/../include/conexao.php';
+$conn = conectarBanco();
+$stmt = $conn->prepare(
+    'SELECT c.id_cursos, c.nome_cursos, c.num_aulas, c.periodo, m.id_lista
+     FROM cursos c
+     LEFT JOIN matriculas m ON m.id_curso = c.id_cursos AND m.id_usuario = ?
+     ORDER BY c.nome_cursos'
+);
+$stmt->bind_param('i', $usuarioId);
+$stmt->execute();
+$resultado = $stmt->get_result();
+$csrfToken = $_SESSION['csrf_token'];
+?>
+<section class="informacoes">
+    <h1>Cursos</h1>
+    <p>Escolha um curso para realizar sua matrícula.</p>
+</section>
 
-        <section class="informacoes">
-            <!--Javascript com buscar o nome do curso no banco | aulas do curso | Vagas 00/30 | matricula(botão)-->
-        </section>
-
-        <h1>Teste</h1>
-    </main>
-
-    <footer-component></footer-component>
-
-    <script src="../js/include.js"></script>
-</body>
-</html>
+<section class="informacoes">
+    <h2>Cursos disponíveis</h2>
+    <?php if ($resultado->num_rows === 0): ?>
+        <p>Nenhum curso disponível no momento.</p>
+    <?php else: ?>
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>Curso</th>
+                    <th>Número de aulas</th>
+                    <th>Período</th>
+                    <th>Matrícula</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($curso = $resultado->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($curso['nome_cursos'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($curso['num_aulas'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($curso['periodo'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td>
+                            <?php if ($curso['id_lista'] !== null): ?>
+                                <a href="../include/layout.php?pagina=extrato&id=<?= (int) $curso['id_lista'] ?>">
+                                    Ver extrato
+                                </a>
+                            <?php else: ?>
+                                <form method="post" action="../include/layout.php?pagina=cursos">
+                                    <input type="hidden" name="acao" value="matricular">
+                                    <input type="hidden" name="id_curso" value="<?= (int) $curso['id_cursos'] ?>">
+                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+                                    <button type="submit">Matricular-se</button>
+                                </form>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</section>

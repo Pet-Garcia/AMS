@@ -1,7 +1,11 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "pi_cursos");
+function conectarBanco(): mysqli
+{
+    $conn = new mysqli("localhost", "root", "", "pi_cursos");
+    $conn->set_charset("utf8mb4");
 
-if (!$conn) {
-    die("Erro de conexão: " . mysqli_connect_error());
+    return $conn;
 }
+
+
 ?>
