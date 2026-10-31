@@ -6,13 +6,29 @@ if (!defined('APP_LAYOUT')) {
 
 require_once __DIR__ . '/../include/conexao.php';
 $conn = conectarBanco();
+
+/* Paginação - Inicio */
+$por_pagina = 10;
+
+$pag_atual = isset($_GET['p']) ? (int) $_GET['p'] : 1;
+if ($pag_atual < 1) $pag_atual = 1;
+
+$total = (int) $conn->query('SELECT COUNT(*) AS total FROM cursos')->fetch_assoc()['total'];
+$total_paginas = max(1, (int) ceil($total / $por_pagina));
+
+if ($pag_atual > $total_paginas) $pag_atual = $total_paginas;
+
+$offset = ($pag_atual - 1) * $por_pagina;
+/* Paginação - Fim */
+
 $stmt = $conn->prepare(
-    'SELECT c.id_cursos, c.nome_cursos, c.num_aulas, c.periodo, m.id_lista
+    'SELECT c.id_cursos, c.nome_cursos, c.num_aulas, c.periodo, c.vagas, c.vagas_ocupadas, m.id_lista
      FROM cursos c
      LEFT JOIN matriculas m ON m.id_curso = c.id_cursos AND m.id_usuario = ?
-     ORDER BY c.nome_cursos'
+     ORDER BY c.nome_cursos
+     LIMIT ? OFFSET ?'
 );
-$stmt->bind_param('i', $usuarioId);
+$stmt->bind_param('iii', $usuarioId, $por_pagina, $offset);
 $stmt->execute();
 $resultado = $stmt->get_result();
 $csrfToken = $_SESSION['csrf_token'];
@@ -32,6 +48,7 @@ $csrfToken = $_SESSION['csrf_token'];
                 <tr>
                     <th>Curso</th>
                     <th>Número de aulas</th>
+                    <th>Vagas</th>
                     <th>Período</th>
                     <th>Matrícula</th>
                 </tr>
@@ -41,6 +58,7 @@ $csrfToken = $_SESSION['csrf_token'];
                     <tr>
                         <td><?= htmlspecialchars($curso['nome_cursos'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($curso['num_aulas'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($curso['vagas_ocupadas'], ENT_QUOTES, 'UTF-8') ?> / <?= htmlspecialchars($curso['vagas'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($curso['periodo'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td>
                             <?php if ($curso['id_lista'] !== null): ?>
@@ -60,5 +78,24 @@ $csrfToken = $_SESSION['csrf_token'];
                 <?php endwhile; ?>
             </tbody>
         </table>
+        <?php if ($total_paginas > 1): ?>
+            <div class="paginacao">
+                <?php if ($pag_atual > 1): ?>
+                    <a href="?pagina=cursos&p=<?= $pag_atual - 1 ?>">&laquo; Anterior</a>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                    <?php if ($i === $pag_atual): ?>
+                        <span class="atual"><?= $i ?></span>
+                    <?php else: ?>
+                        <a href="?pagina=cursos&p=<?= $i ?>"><?= $i ?></a>
+                    <?php endif; ?>
+                <?php endfor; ?>
+
+                <?php if ($pag_atual < $total_paginas): ?>
+                    <a href="?pagina=cursos&p=<?= $pag_atual + 1 ?>">Próxima &raquo;</a>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 </section>

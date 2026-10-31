@@ -155,5 +155,21 @@ unset($_SESSION['flash_message']);
     </main>
 
     <?php require __DIR__ . '/footer.html'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+    <script>
+    new simpleDatatables.DataTable(".tabela", {
+        perPage: 25,
+        perPageSelect: [10, 25, 50],
+        columns: [
+        { select: 4, sortable: false }
+        ],
+        labels: {
+        placeholder: "Pesquisar...",
+        perPage: "registros por página",
+        noRows: "Nenhum registro encontrado",
+        info: "{start} a {end} de {rows} no total"
+        }
+    });
+    </script>
 </body>
 </html>
