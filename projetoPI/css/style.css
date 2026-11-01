@@ -213,9 +213,31 @@ footer p {
 /*
     Login e cadastro
 */
-.auth {
-  max-width: 32rem;
-  text-align: left;
+
+.pagina-auth {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 1rem;
+
+  background-color: #aa914d;
+  background-image:
+    /* onda da frente: dourado claro */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath fill='%23f0dc9c' fill-opacity='0.85' d='M0,224L48,208C96,192,192,160,288,170.7C384,181,480,235,576,234.7C672,235,768,181,864,165.3C960,149,1056,171,1152,186.7C1248,203,1344,213,1392,218.7L1440,224L1440,320L0,320Z'/%3E%3C/svg%3E"),
+    /* onda de trás: dourado escuro */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath fill='%238a732f' fill-opacity='0.6' d='M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,128C672,107,768,85,864,101.3C960,117,1056,171,1152,181.3C1248,192,1344,160,1392,144L1440,128L1440,320L0,320Z'/%3E%3C/svg%3E"),
+    /* fundo em degradê */
+    linear-gradient(135deg, #cfb15f 0%, #aa914d 100%);
+  background-repeat: no-repeat;
+  background-position: bottom, bottom, center;
+  background-size: 100% 50vh, 100% 100vh, cover;
+}
+
+.pagina-auth .conteudo {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0;
+  padding: 0;
 }
 
 .auth h1,
@@ -239,6 +261,10 @@ footer p {
 .auth-form button {
   margin-top: 0.5rem;
   cursor: pointer;
+}
+
+.auth-form button:hover {
+  background: #cfb15f;
 }
 
 .auth-link {

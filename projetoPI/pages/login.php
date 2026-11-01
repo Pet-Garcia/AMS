@@ -14,7 +14,7 @@ if (isset($_SESSION['usuario']['id'])) {
     <title>Entrar ou criar conta</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
+<body class="pagina-auth">
     <main class="conteudo">
         <section class="informacoes auth">
             <section id="login-section" aria-labelledby="login-title">
