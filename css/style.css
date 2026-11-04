@@ -1,0 +1,367 @@
+/*
+    Base
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: #222;
+}
+
+/*
+    Header - estrutura
+*/
+header-component {
+  display: block;
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0 2rem;
+  background: #cfb15f;
+  border-bottom: 3px solid #aa914d;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+header nav span {
+  align-self: center;
+  margin-left: auto;
+  font-weight: 600;
+  color: rgb(3, 43, 123);
+}
+
+/*
+    Header - botões
+*/
+header a {
+  padding: 1rem 1.25rem;
+  color: rgb(3, 43, 123);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 4px solid transparent;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+header a:hover,
+header a:focus-visible {
+  color: #cfb15f;
+  background-color: rgb(3, 43, 123);
+  border-bottom-color: #aa914d;
+  outline: none;
+}
+
+header a[aria-current="page"] {
+  background-color: #aa914d;
+  border-bottom-color: rgb(3, 43, 123);
+}
+
+/*
+    Footer
+*/
+footer-component {
+    display: block;
+    background: #cfb15f;
+    padding-top: 1px;
+}
+
+footer p {
+    text-align: center;
+}
+
+/*
+    Containers
+*/
+.conteudo {
+  max-width: 75%;
+  margin: 0 auto;      /* centraliza horizontalmente */
+  padding: 2rem 1rem;
+}
+
+.informacoes {
+  max-width: 100%;
+  margin: 0 auto 2rem; /* centralizado, com espaço embaixo */
+  padding: 2rem;
+  text-align: center;
+  background: #f0f0f0;
+  border-radius: 8px;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 colunas iguais */
+  grid-auto-rows: 120px;                 /* altura base de cada linha */
+  gap: 1rem;
+}
+
+.container-grande {
+    grid-column: span 2;
+    grid-row: span 2;
+    background: #f0f0f0;
+    padding: 0% 5% 0% 5%;
+    border-radius: 8px;
+}
+
+/*
+    Tabela
+*/
+.tabela {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.tabela th,
+.tabela td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabela th + th,
+.tabela td + td {
+  border-left: 1px solid #ddd;
+}
+
+.tabela thead th {
+  background: rgb(3, 43, 123);
+  color: #fff;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 3px solid #cfb15f;
+}
+
+.tabela tbody tr:nth-child(even) {
+  background: #f7f4ea;
+}
+
+.tabela tbody tr:hover {
+  background: #efe5c4;
+}
+
+.tabela tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabela .acoes {
+  white-space: nowrap;
+}
+
+/*
+    Botões da tabela
+*/
+.tabela form {
+  display: inline;
+  margin: 0;
+}
+
+.btn,
+.tabela button {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: rgb(3, 43, 123);
+  color: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.15s;
+}
+
+.btn:hover,
+.tabela button:hover {
+  transform: translateY(-1px);
+  background: rgb(6, 61, 171);
+}
+
+.btn:focus-visible,
+.tabela button:focus-visible {
+  outline: 3px solid #cfb15f;
+  outline-offset: 2px;
+}
+
+.btn-editar {
+  background: #1e40af;
+}
+.btn-editar:hover {
+  background: #172e85;
+}
+
+.btn-excluir {
+  background: #b91c1c;
+}
+.btn-excluir:hover {
+  background: #8f1414;
+}
+
+/*
+    Login e cadastro
+*/
+
+.pagina-auth {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 1rem;
+
+  background-color: #aa914d;
+  background-image:
+    /* onda da frente: dourado claro */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath fill='%23f0dc9c' fill-opacity='0.85' d='M0,224L48,208C96,192,192,160,288,170.7C384,181,480,235,576,234.7C672,235,768,181,864,165.3C960,149,1056,171,1152,186.7C1248,203,1344,213,1392,218.7L1440,224L1440,320L0,320Z'/%3E%3C/svg%3E"),
+    /* onda de trás: dourado escuro */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath fill='%238a732f' fill-opacity='0.6' d='M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,128C672,107,768,85,864,101.3C960,117,1056,171,1152,181.3C1248,192,1344,160,1392,144L1440,128L1440,320L0,320Z'/%3E%3C/svg%3E"),
+    /* fundo em degradê */
+    linear-gradient(135deg, #cfb15f 0%, #aa914d 100%);
+  background-repeat: no-repeat;
+  background-position: bottom, bottom, center;
+  background-size: 100% 50vh, 100% 100vh, cover;
+}
+
+.pagina-auth .conteudo {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0;
+  padding: 0;
+}
+
+.auth h1,
+.auth > p {
+  text-align: center;
+}
+
+.auth-form {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.auth-form input,
+.auth-form button {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.7rem;
+  font: inherit;
+}
+
+.auth-form button {
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+
+.auth-form button:hover {
+  background: #cfb15f;
+}
+
+.auth-link {
+  border: 0;
+  padding: 0;
+  color: rgb(3, 43, 123);
+  background: transparent;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.auth-message {
+  min-height: 1.5em;
+  text-align: center;
+}
+
+.flash-message {
+  padding: 0.75rem 1rem;
+  background: #e8f3e8;
+  border-radius: 6px;
+}
+
+.course-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.course-filter select,
+.course-filter button,
+.tabela button,
+.receipt button {
+  padding: 0.6rem 0.9rem;
+  font: inherit;
+}
+
+.tabela form {
+  margin: 0;
+}
+
+.receipt {
+  text-align: left;
+}
+
+.receipt h2,
+.receipt h3 {
+  text-align: center;
+}
+
+/*
+    Paginação das tabelas
+*/
+.paginacao {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.paginacao a,
+.paginacao span {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgb(3, 43, 123);
+  border-radius: 6px;
+  color: rgb(3, 43, 123);
+  text-decoration: none;
+}
+
+.paginacao a:hover {
+  background: rgb(3, 43, 123);
+  color: #fff;
+}
+
+.paginacao .atual {
+  background: rgb(3, 43, 123);
+  color: #fff;
+  font-weight: 700;
+}
+
+@media print {
+  header,
+  footer,
+  .flash-message,
+  .no-print {
+    display: none !important;
+  }
+
+  .conteudo,
+  .receipt {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+}
