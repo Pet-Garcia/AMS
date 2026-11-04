@@ -33,14 +33,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $conn = conectarBanco();
-        $stmt = $conn->prepare('SELECT id_cursos FROM cursos WHERE id_cursos = ?');
+        $conn->begin_transaction();
+
+        // Trava a linha do curso: duas matrículas simultâneas não ultrapassam o limite de vagas
+        $stmt = $conn->prepare('SELECT vagas FROM cursos WHERE id_cursos = ? FOR UPDATE');
         $stmt->bind_param('i', $idCurso);
         $stmt->execute();
-        $stmt->store_result();
-        $cursoExiste = $stmt->num_rows === 1;
+        $stmt->bind_result($vagas);
+        $cursoExiste = $stmt->fetch() === true;
         $stmt->close();
 
         if (!$cursoExiste) {
+            $conn->rollback();
             $_SESSION['flash_message'] = 'O curso selecionado não existe.';
             header('Location: layout.php?pagina=cursos');
             exit;
@@ -55,11 +59,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->fetch()) {
             $stmt->close();
+            $conn->rollback();
             $_SESSION['flash_message'] = 'Você já está matriculado neste curso.';
             header('Location: layout.php?pagina=extrato&id=' . (int) $idMatricula);
             exit;
         }
         $stmt->close();
+
+        // Vagas ocupadas = matrículas reais do curso (sem contador separado para dessincronizar)
+        $stmt = $conn->prepare('SELECT COUNT(*) FROM matriculas WHERE id_curso = ?');
+        $stmt->bind_param('i', $idCurso);
+        $stmt->execute();
+        $stmt->bind_result($ocupadas);
+        $stmt->fetch();
+        $stmt->close();
+
+        if ($ocupadas >= $vagas) {
+            $conn->rollback();
+            $_SESSION['flash_message'] = 'Não há vagas disponíveis neste curso.';
+            header('Location: layout.php?pagina=cursos');
+            exit;
+        }
 
         $stmt = $conn->prepare(
             'INSERT INTO matriculas (id_curso, id_usuario) VALUES (?, ?)'
@@ -69,11 +89,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idMatricula = $conn->insert_id;
         $stmt->close();
 
+        $conn->commit();
+
         $_SESSION['flash_message'] = 'Matrícula realizada com sucesso.';
         header('Location: layout.php?pagina=extrato&id=' . $idMatricula);
         exit;
     } catch (mysqli_sql_exception $erro) {
         error_log('Erro ao realizar matrícula: ' . $erro->getMessage());
+
+        if (isset($conn)) {
+            $conn->rollback();
+        }
 
         if ($erro->getCode() === 1062) {
             $stmt = $conn->prepare(

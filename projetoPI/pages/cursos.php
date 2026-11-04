@@ -8,7 +8,7 @@ require_once __DIR__ . '/../include/conexao.php';
 $conn = conectarBanco();
 
 /* Paginação - Inicio */
-$por_pagina = 10;
+$por_pagina = 25;
 
 $pag_atual = isset($_GET['p']) ? (int) $_GET['p'] : 1;
 if ($pag_atual < 1) $pag_atual = 1;
@@ -22,7 +22,9 @@ $offset = ($pag_atual - 1) * $por_pagina;
 /* Paginação - Fim */
 
 $stmt = $conn->prepare(
-    'SELECT c.id_cursos, c.nome_cursos, c.num_aulas, c.periodo, c.vagas, c.vagas_ocupadas, m.id_lista
+    'SELECT c.id_cursos, c.nome_cursos, c.num_aulas, c.periodo, c.vagas,
+            (SELECT COUNT(*) FROM matriculas mt WHERE mt.id_curso = c.id_cursos) AS vagas_ocupadas,
+            m.id_lista
      FROM cursos c
      LEFT JOIN matriculas m ON m.id_curso = c.id_cursos AND m.id_usuario = ?
      ORDER BY c.nome_cursos
@@ -58,7 +60,8 @@ $csrfToken = $_SESSION['csrf_token'];
                     <tr>
                         <td><?= htmlspecialchars($curso['nome_cursos'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($curso['num_aulas'], ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><?= htmlspecialchars($curso['vagas_ocupadas'], ENT_QUOTES, 'UTF-8') ?> / <?= htmlspecialchars($curso['vagas'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <?php $disponiveis = max(0, (int) $curso['vagas'] - (int) $curso['vagas_ocupadas']); ?>
+                        <td><?= $disponiveis ?> / <?= (int) $curso['vagas'] ?></td>
                         <td><?= htmlspecialchars($curso['periodo'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td>
                             <?php if ($curso['id_lista'] !== null): ?>
@@ -70,7 +73,11 @@ $csrfToken = $_SESSION['csrf_token'];
                                     <input type="hidden" name="acao" value="matricular">
                                     <input type="hidden" name="id_curso" value="<?= (int) $curso['id_cursos'] ?>">
                                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
-                                    <button type="submit">Matricular-se</button>
+                                    <?php if ($disponiveis > 0): ?>
+                                        <button type="submit">Matricular-se</button>
+                                    <?php else: ?>
+                                        <button type="button" disabled>Vagas esgotadas</button>
+                                    <?php endif; ?>
                                 </form>
                             <?php endif; ?>
                         </td>
